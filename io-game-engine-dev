@@ -1,0 +1,17 @@
+The IO Game Engine
+
+
+
+Why Rust?
+
+I choose the rust languange as a new developer because of its performance, focus on correctness, and lack of footguns. 
+Rust is more than a programming language, and I don't know if I would start this project with rust if the cargo package manager didn't exist.
+
+
+Overall Plan
+
+The IO Game Engine is actually being made initially with the Bevy game framework. New features will initially be developed with it's ecosyystem of 
+plugins, but eventually external dependencies will be replaced. In theory, anything developed for the engine should work for Bevy because of 
+how the framweork is designed, at least until Bevy itself is phaised out.
+
+I choose Bevy because of it's Entity Component System. the dev team continously improves the ergonomics of the system, and it's wonderful to program with.

@@ -1,0 +1,185 @@
+Detailed Plan
+
+    The project plan is divided up in steps and tests. The organization, order, and timings of this may change in the future.
+
+    Steps are mostly feature implementations or code refactors that are to be done in source code. 
+
+    Tests are there to prove the reliability, practicality, and usefulness of the project. 
+    These will mostly be done in-engine and they are meant to drive development forward and remove dependencies. 
+    In some cases, tests might try to internalize steps that exist as source code and implemnt them in-engine.
+
+    One last thing to note is that the distinction between steps and tests is not discrete, 
+    but rather just a useful interpretation.
+
+
+1. Step 1 - UI - Current Hurdle
+
+    For a variety of reasons, the IO game engine is being developed from a user standpoint. 
+    The UI design is being inspired by the Blender 3d software.
+
+    Unlike a normal UI system, the IO system for this game engine is being devloped for 3D  first with viewport raycasting. 
+    This is to reduce code duplication and to most amount of features in as little time as possible. 
+    This also eliminates most code refactors down the line. VR development was one of the considerations, 
+    but ultimatley not the leading one.
+
+    The UI plugin created by this step will likely be open sourced and be designed to work within the Bevy ecosystem. 
+    I may or may not decide to give this plugin up to more capable programmers. 
+
+
+2. Step 2 - Node System - Future Hurdle
+
+    This is the core system for the game engine. 
+    This step will be taking inspiration form the various node systems out there, mainly Blender's Geometry and Shader Nodes. 
+    There is an additonal Blender plugin called Sverchok, that I will take inspiration from. UPBGE's Logic Nodes is also a target.
+
+    I haven't taken a look at Unreal's Blueprint system yet, but it might be a possible target for inspiration, though unlikely. 
+    There are more Node-based softwares out there that are more desireable for me.
+
+    Obviously I won't be copying or mimicking the code for any of these softwares or plugins regardless of the license, 
+    that will be done after I achieve feature parity and that will only be done in order to create importers and transpiler plugins.
+
+    This step will be broken down to smaller steps:
+
+
+        2a. Geometry Nodes + Sverchok + Basic Physics Nodes 
+
+            Focus on implementing Math nodes, Node groups, and Procedural Geometry. In that order.
+
+
+        2b. UPBGE Logic Nodes + Custom Nodes + Node Truncation & Optimization
+
+            Focus on events, queries, entity manipulation, logic creation.
+
+            The Custom Node system will be my first oportunity to embed a text editor, but the goal is to create nodes in-UI. 
+            Text Editor -> Prompting System -> Nodes in-UI
+
+            Most of the Custom Node system will likely be deprecated or transformed beyond recognition besides the text editor. 
+
+            Node truncation and optimization will be focused on compressing node trees. 
+            This might be a little hard to do without scripting, but it should be possible once the architecture to support 
+            logic nodes is created.
+
+
+        2c. Shader Nodes
+
+            Unlike Blender's shader Nodes that are written in Open Shading Language(OSL), 
+            my shader nodes will have to be written using WebGPU Shading Language(WGSL). 
+
+            This will likely be the most difficult node system to implment, 
+            but I believe that it is very important that this gets done as soon as possible.
+
+            This will most likely require some sort of parsing system, and likely even some sort of hot-reloading implementation.
+
+
+        2d. Other node systems
+
+            I have some programs in mind, but i forget their names and I've never used them. 
+            Once the other node systems are established, I'll start looking at more programs.
+
+
+3. Test 1 - Reimplement the UI system in the Node system.
+
+    This should be easy enough. It might even get completed after 2a or 2b.
+
+
+4. Step 3 - Timing Feedback + CPU and GPU scheduling - Future Hurdle
+
+    Timing Feedback will likelybe imlemented with Puffin first, then maybe rebuilt with a node system.
+
+    I want to explicitly schedule frames, systems, and node trees, both for the CPU and for the GPU in the case of shaders. 
+    There should still be free scheduling. Automatic scheduling algorithims can be built on top of this, but not in this step. 
+
+    The scheduling system should be frame agnostic first by using plack units or GeV. 
+    Frame scheduling(not frame buffers) can be built on top of the frame-agnostic scheduling.
+
+
+5. Test 2 - Render Engine Implementation
+
+    The API for IO game engine will be developed throught the project. 
+    Here We remove the glue code between Bevy's render engine and create my own render engine implmentation. 
+    Users should be able to create their own rendering engines, this is just here to give the engine something 
+    to work with to keep it usable. This should map directly to the window.
+
+6. Step 4 - Genetic Programming + Saving System + Serializing/Desearlizing
+
+    It's a little late for this to be implemtend at this point. 
+    I would like to do this earlier if possible, it depends a little on how the rust and bevy ecosystem develops. 
+    But if it's not done yet, then this needs to be done now.
+
+    This will likely involve some refactoring for pervious work. 
+    The idea is to implement some sort of Program DNA that will allow for backwards compatability for files. 
+    I also intend to minimally support some sort of future compatability without extra work.
+
+
+8. Step 6 - Dependency Stripping
+
+    When games are created from the engine, I want to allow users to both lock away and to completly remove parts 
+    or all of the engine from the game itself. I want this to be fully configurable by the user.
+
+
+9. Step 7 - Scripting, Modding, and More Programing Support
+
+    Allow engine users to expose values to game users and to optinally accept overides and values from game-users. 
+    This shouwld work for all drivers/node-trees.
+
+    Give mod support for games.
+
+    Further develop the scripting support for both in-engine and in-game. 
+    I first want to give Rust scripting support, WASM, Rune programming language, and then Lua.
+
+    Rust -> WASM -> Rune -> Lua. 
+
+    API for engine users to devlop their own plugins for languages.
+    Rune will likely be the language driving scripting support development.
+
+        { Some sort of Transpiler Token API should be developed or implemented to allow users 
+        to programm in any language and transpile it to other languages easily. } Meta Parsing
+
+
+9. Test 3 - Game-Time
+
+    Create a game with the engine.
+
+
+10. Step 10 - Engine Dependency Stripping
+
+    Stripping of dependencies besides Bevy's ECS
+
+
+11. Test 4 - Replication
+
+    Create the Engine inside the Engine. Most of it should be done with Nodes, 
+    but there will eneviatably be reguar code in there.
+
+
+12. Step 11 - ECS Stripping
+
+    Remove the Bevy ECS from the engine and replace it with my own implementation. 
+
+    This will require a huge refactor, and will be a huge endevour, but by this stage, I think I should be able to do it.
+
+
+13. Step 12 - IO-Lang Rewrite and Transpilers
+
+    Rewrite of the IO engine in my own language. It's currently at a theoretical phase, 
+    but if I want the engine to be be able to do all the things I imagine, then I think this step is necessary.
+
+    The language is currently at the theoretical stage, but I imagine that it can transpile to most other languages, 
+    though Rust will be the target one. I want it to be as pailess as possible. 
+    Ideally I won't actually be rewriting the program, but simpliy transpiling it, 
+    then refactoring it to reduce the code base size. If the language gets developed before Step 11, 
+    then I might convert the code base sooner.
+
+
+
+# PLANNED DEPENDENCIES
+
+rust-gpu: possible dependency. 
+    It transpiles rust code to SPIR-V. Most likely useful in the shader nodes and the gpu scheduling sytem.
+
+wgpu: 
+    allows for gpu support on the web and cross-platform.
+
+winit: 
+    cross platform windowing.
+
